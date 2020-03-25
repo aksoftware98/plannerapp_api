@@ -53,7 +53,7 @@ namespace PlannerApp.Server.Controllers
 
             return Ok(new CollectionPagingResponse<Plan>
             {
-                Count = plans.Count(),
+                Count = totalPlans,
                 IsSuccess = true,
                 Message = "Plans received successfully!",
                 OperationDate = DateTime.UtcNow,
@@ -72,7 +72,7 @@ namespace PlannerApp.Server.Controllers
             if (page == 0)
                 page = 1;
             var plans = _plansService.SearchPlansAsync(query, PAGE_SIZE, page, userId, out totalPlans);
-
+            
             int totalPages = 0;
             if (totalPlans % PAGE_SIZE == 0)
                 totalPages = totalPlans / PAGE_SIZE;
@@ -81,7 +81,7 @@ namespace PlannerApp.Server.Controllers
 
             return Ok(new CollectionPagingResponse<Plan>
             {
-                Count = plans.Count(),
+                Count = totalPlans,
                 IsSuccess = true,
                 Message = $"Plans of '{query}' received successfully!",
                 OperationDate = DateTime.UtcNow,

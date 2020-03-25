@@ -30,9 +30,4 @@
     <ProjectReference Include="..\PlannerApp.Models\PlannerApp.Models.csproj" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Folder Include="wwwroot\Images\" />
-  </ItemGroup>
-
 </Project>

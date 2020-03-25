@@ -21,7 +21,6 @@ namespace PlannerApp.Models
 
     public class CollectionPagingResponse<T> : CollectionResponse<T>
     {
-        
         public int Page { get; set; }
         public int PageSize { get; set; }
         public int? NextPage { get; set; }
