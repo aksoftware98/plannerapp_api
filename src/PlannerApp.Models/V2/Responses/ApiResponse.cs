@@ -30,5 +30,6 @@ namespace PlannerApp.Models.V2.Responses
             Value = value;
             Message = message; 
         }
+
     }
 }
