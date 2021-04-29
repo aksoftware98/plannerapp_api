@@ -12,4 +12,6 @@ namespace PlannerApp.Models
         public Dictionary<string ,string> UserInfo { get; set; }
         public DateTime? ExpireDate { get; set; }
     }
+
+    public 
 }
