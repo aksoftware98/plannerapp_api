@@ -16,4 +16,6 @@ namespace PlannerApp.Server.Interfaces
         Task<PagedList<PlanDetail>> GetPlans(string query, int page = 1, int pageSize = 12);
 
     }
+
+
 }
