@@ -20,6 +20,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
+using PlannerApp.Server.Interfaces;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace PlannerApp.Server
 {
@@ -69,8 +72,10 @@ namespace PlannerApp.Server
             });
 
             services.AddScoped<IUserService, UserService>();
-            services.AddTransient<IPlansService, PlansService>();
-            services.AddTransient<IItemsService, ToDoItemsService>();
+            services.AddTransient<PlannerApp.Server.Services.IPlansService, PlansService>();
+            services.AddTransient<PlannerApp.Server.Services.IItemsService, ToDoItemsService>();
+
+            services.AddScoped<PlannerApp.Server.Interfaces.IPlansService, PlannerApp.Server.Services.V2.PlansService>();
 
             services.AddSwaggerGen(options =>
             {
@@ -84,6 +89,8 @@ namespace PlannerApp.Server
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
 
+            services.AddScoped<IStorageService, AzureBlobStorageService>(); 
+
             services.AddRazorPages();
 
             services.AddCors(options =>
@@ -92,6 +99,20 @@ namespace PlannerApp.Server
                 {
                     policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                 });
+            });
+
+            // Configure the identity options for the logged in user 
+            services.AddScoped(sp =>
+            {
+                var identityOptions = new Options.IdentityOptions();
+                var httpContext = sp.GetService<IHttpContextAccessor>().HttpContext;
+                if (httpContext.User.Identity.IsAuthenticated)
+                {
+                    identityOptions.UserId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                    identityOptions.FirstName = httpContext.User.FindFirst(ClaimTypes.GivenName).Value;
+                    identityOptions.LastName = httpContext.User.FindFirst(ClaimTypes.Surname).Value;
+                }
+                return identityOptions;
             });
 
             services.Configure<ApiBehaviorOptions>(options =>

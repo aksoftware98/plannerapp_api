@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 
 namespace PlannerApp.Server.Controllers.V2
 {
-    [Route("api/[controller]")]
+    [Route("api/v2/[controller]")]
     [ApiController]
     public class PlansController : ControllerBase
     {
+
+
+
     }
 }
