@@ -1,6 +1,7 @@
 ﻿using PlannerApp.Models;
 using PlannerApp.Models.V2.DTO;
 using PlannerApp.Server.Data;
+using PlannerApp.Server.Exceptions;
 using PlannerApp.Server.Interfaces;
 using PlannerApp.Server.Options;
 using System;
@@ -50,9 +51,16 @@ namespace PlannerApp.Server.Services.V2
             }
         }
 
-        public Task DeleteAsync(string id)
+        public async Task DeleteAsync(string id)
         {
-            throw new NotImplementedException();
+            var plan = await _db.Plans.FindAsync(id);
+            if (plan == null)
+                throw new NotFoundException($"Plan with the Id: {id} not found");
+
+            plan.IsDeleted = true;
+            plan.ModifiedDate = DateTime.UtcNow;
+
+            await _db.SaveChangesAsync(); 
         }
 
         public Task<PlanDetail> EditAsync(PlanDetail plan)
