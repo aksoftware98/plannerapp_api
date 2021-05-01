@@ -47,6 +47,7 @@ namespace PlannerApp.Server.Services.V2
                 await _db.Plans.AddAsync(plan);
                 await _db.SaveChangesAsync();
 
+                ts.Complete(); 
                 return null;
             }
         }
@@ -63,9 +64,31 @@ namespace PlannerApp.Server.Services.V2
             await _db.SaveChangesAsync(); 
         }
 
-        public Task<PlanDetail> EditAsync(PlanDetail plan)
+        public async Task<PlanDetail> EditAsync(PlanDetail model)
         {
-            throw new NotImplementedException();
+            using (var ts = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                var plan = await _db.Plans.FindAsync(model.Id);
+                if (plan == null)
+                    throw new NotFoundException($"Plan with the Id: {model.Id} not found");
+
+                var url = plan.CoverPath;
+                var old = plan.CoverPath;
+                if (model.CoverFile != null)
+                    url = await _storage.SaveBlobAsync(model.CoverFile, Models.BlobType.Image);
+
+                plan.Title = model.Title;
+                plan.Description = model.Description;
+                plan.ModifiedDate = DateTime.UtcNow;
+                plan.CoverPath = url;
+
+                await _db.SaveChangesAsync();
+
+                if (old.Contains("default.jpg"))
+                    await _storage.RemoveAsync(old);
+
+                return null;
+            }
         }
 
         public Task<PlanDetail> GetByIdAsync(string id)
