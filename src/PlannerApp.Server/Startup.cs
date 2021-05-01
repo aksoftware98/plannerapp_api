@@ -42,6 +42,7 @@ namespace PlannerApp.Server
             // Configure Entityframecore with SQL SErver
             services.AddDbContext<ApplicationDbContext>(options =>
             {
+                options.UseLazyLoadingProxies();
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
             

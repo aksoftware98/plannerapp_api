@@ -22,6 +22,6 @@ namespace PlannerApp.Models
         [StringLength(256)]
         public string CoverPath { get; set; }
 
-        public ICollection<ToDoItem> ToDoItems { get; set; }
+        public virtual List<ToDoItem> ToDoItems { get; set; }
     }
 }

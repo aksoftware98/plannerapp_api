@@ -16,7 +16,7 @@ namespace PlannerApp.Models
         public DateTime? EstimatedDate { get; set; }
         public DateTime? AchievedDate { get; set; } 
 
-        public Plan Plan { get; set; }
+        public virtual Plan Plan { get; set; }
 
         [ForeignKey("Plan")]
         public string PlanId { get; set; }
