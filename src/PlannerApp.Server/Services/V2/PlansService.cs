@@ -3,6 +3,7 @@ using PlannerApp.Models.V2.DTO;
 using PlannerApp.Server.Data;
 using PlannerApp.Server.Exceptions;
 using PlannerApp.Server.Interfaces;
+using PlannerApp.Server.Mappers;
 using PlannerApp.Server.Options;
 using System;
 using System.Collections.Generic;
@@ -47,8 +48,10 @@ namespace PlannerApp.Server.Services.V2
                 await _db.Plans.AddAsync(plan);
                 await _db.SaveChangesAsync();
 
+                var result = plan.ToPlanDetail();
+
                 ts.Complete(); 
-                return null;
+                return result;
             }
         }
 
@@ -87,18 +90,28 @@ namespace PlannerApp.Server.Services.V2
                 if (old.Contains("default.jpg"))
                     await _storage.RemoveAsync(old);
 
-                return null;
+                var result = plan.ToPlanDetail();
+
+                ts.Complete();
+                return result;
             }
         }
 
-        public Task<PlanDetail> GetByIdAsync(string id)
+        public async Task<PlanDetail> GetByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            var plan = await _db.Plans.FindAsync(id);
+            if (plan == null || plan.UserId != _identity.UserId)
+                throw new NotFoundException($"Plan with the Id: {id} cannot be found");
+
+            return plan.ToPlanDetail();
         }
 
-        public Task<PagedList<PlanDetail>> GetPlans(string query, int page = 1, int pageSize = 12)
+        public async Task<PagedList<PlanDetail>> GetPlans(string query, int page = 1, int pageSize = 12)
         {
-            throw new NotImplementedException();
+            //var plans = (from p in _db.Plans
+            //             where p.UserId == _identity.UserId
+            //             && (p.Description.Contains(query, StringComparison.InvariantCultureIgnoreCase)
+            //                || p.Title.Contains(query, StringComparison.InvariantCultureIgnoreCase),
         }
     }
 }
