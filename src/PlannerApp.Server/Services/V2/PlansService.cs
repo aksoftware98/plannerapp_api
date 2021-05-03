@@ -161,17 +161,33 @@ namespace PlannerApp.Server.Services.V2
             await _db.ToDoItems.AddAsync(todoItem);
             await _db.SaveChangesAsync();
 
-            return todoItem; 
+            return todoItem.ToToDoItemDetail(); 
         }
 
-        public Task DeleteAsync(string id)
+        public async Task DeleteAsync(string id)
         {
-            throw new NotImplementedException();
+            var item = await _db.ToDoItems.FindAsync(id);
+            if (item == null)
+                throw new NotFoundException($"ToDo with the {id} couldn't be found");
+
+            item.IsDeleted = true;
+            item.ModifiedDate = DateTime.UtcNow;     
+            await _db.SaveChangesAsync(); 
         }
 
-        public Task<ToDoItemDetail> EditAsync(ToDoItemDetail plan)
+        public async Task<ToDoItemDetail> EditAsync(ToDoItemDetail model)
         {
-            throw new NotImplementedException();
+            var item = await _db.ToDoItems.FindAsync(model.Id);
+            if (item == null)
+                throw new NotFoundException($"ToDo with the {model.Id} couldn't be found");
+
+            item.Description = model.Description;
+            item.AchievedDate = model.AchievedDate;
+            item.ModifiedDate = DateTime.UtcNow;     
+            item.IsDone = model.IsDone;
+            
+            await _db.SaveChangesAsync();
+            return item.ToToDoItemDetail();
         }
 
         public Task<PagedList<ToDoItemDetail>> GetNotdoneAsync()
