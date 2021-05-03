@@ -1,4 +1,5 @@
-﻿using PlannerApp.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using PlannerApp.Models;
 using PlannerApp.Models.V2.DTO;
 using PlannerApp.Server.Data;
 using PlannerApp.Server.Exceptions;
@@ -48,7 +49,7 @@ namespace PlannerApp.Server.Services.V2
                 await _db.Plans.AddAsync(plan);
                 await _db.SaveChangesAsync();
 
-                var result = plan.ToPlanDetail();
+                var result = plan.ToPlanDetail(true);
 
                 ts.Complete(); 
                 return result;
@@ -90,7 +91,7 @@ namespace PlannerApp.Server.Services.V2
                 if (old.Contains("default.jpg"))
                     await _storage.RemoveAsync(old);
 
-                var result = plan.ToPlanDetail();
+                var result = plan.ToPlanDetail(true);
 
                 ts.Complete();
                 return result;
@@ -103,15 +104,27 @@ namespace PlannerApp.Server.Services.V2
             if (plan == null || plan.UserId != _identity.UserId)
                 throw new NotFoundException($"Plan with the Id: {id} cannot be found");
 
-            return plan.ToPlanDetail();
+            return plan.ToPlanDetail(true);
         }
 
         public async Task<PagedList<PlanDetail>> GetPlans(string query, int page = 1, int pageSize = 12)
         {
-            //var plans = (from p in _db.Plans
-            //             where p.UserId == _identity.UserId
-            //             && (p.Description.Contains(query, StringComparison.InvariantCultureIgnoreCase)
-            //                || p.Title.Contains(query, StringComparison.InvariantCultureIgnoreCase),
+            if (page < 1)
+                page = 1;
+            if (pageSize < 5)
+                pageSize = 5;
+            if (pageSize > 50)
+                pageSize = 50;
+
+            var plans = await (from p in _db.Plans
+                                 where p.UserId == _identity.UserId
+                                 && (p.Title.Contains(query, StringComparison.InvariantCultureIgnoreCase)
+                                    || p.Description.Contains(query, StringComparison.InvariantCultureIgnoreCase))
+                                 orderby p.CreatedDate descending
+                                 select p).ToArrayAsync();
+
+            var pagedList = new PagedList<PlanDetail>(plans.Select(p => p.ToPlanDetail(false)), page, pageSize);
+            return pagedList;
         }
     }
 }

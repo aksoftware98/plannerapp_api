@@ -10,7 +10,7 @@ namespace PlannerApp.Server.Mappers
     public static class PlanMapper
     {
 
-        public static PlanDetail ToPlanDetail(this Plan model)
+        public static PlanDetail ToPlanDetail(this Plan model, bool withDetails)
         {
             return new PlanDetail
             {
@@ -18,7 +18,7 @@ namespace PlannerApp.Server.Mappers
                 CoverUrl = model.CoverPath,
                 Description = model.Description,
                 Title = model.Title,
-                ToDoItems = model.ToDoItems?.Select(t => t.ToToDoItemDetail()).ToList()
+                ToDoItems = withDetails ? model.ToDoItems?.Select(t => t.ToToDoItemDetail()).ToList() : null
             };
         }
 
