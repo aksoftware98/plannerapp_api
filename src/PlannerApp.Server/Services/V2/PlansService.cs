@@ -190,9 +190,16 @@ namespace PlannerApp.Server.Services.V2
             return item.ToToDoItemDetail();
         }
 
-        public Task<PagedList<ToDoItemDetail>> GetNotdoneAsync()
+        public async Task<PagedList<ToDoItemDetail>> GetNotdoneAsync(int page = 1, int pageSize = 12)
         {
-            throw new NotImplementedException();
+            var notDoneItems = await (from i in _db.ToDoItems
+                                      where i.UserId == _identity.UserId
+                                      && !i.IsDeleted && !i.IsDone
+                                      orderby i.CreatedDate descending
+                                      select i).ToArrayAsync();
+
+            var pagedList = new PagedList<ToDoItemDetail>(notDoneItems.Select(i => i.ToToDoItemDetail()), page, pageSize);
+            return pagedList; 
         }
 
         public Task ToggleItemAsync(string id)

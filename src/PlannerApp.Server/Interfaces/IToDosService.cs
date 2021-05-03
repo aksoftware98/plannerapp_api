@@ -9,6 +9,6 @@ namespace PlannerApp.Server.Interfaces
         Task<ToDoItemDetail> EditAsync(ToDoItemDetail plan);
         Task DeleteAsync(string id);
         Task ToggleItemAsync(string id);
-        Task<PagedList<ToDoItemDetail>> GetNotdoneAsync();
+        Task<PagedList<ToDoItemDetail>> GetNotdoneAsync(int page = 1, int pageSize = 12);
     }
 }
