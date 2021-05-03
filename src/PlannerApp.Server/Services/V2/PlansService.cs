@@ -192,6 +192,13 @@ namespace PlannerApp.Server.Services.V2
 
         public async Task<PagedList<ToDoItemDetail>> GetNotdoneAsync(int page = 1, int pageSize = 12)
         {
+            if (page < 1)
+                page = 1;
+            if (pageSize < 5)
+                pageSize = 5;
+            if (pageSize > 50)
+                pageSize = 50;
+
             var notDoneItems = await (from i in _db.ToDoItems
                                       where i.UserId == _identity.UserId
                                       && !i.IsDeleted && !i.IsDone
@@ -202,9 +209,25 @@ namespace PlannerApp.Server.Services.V2
             return pagedList; 
         }
 
-        public Task ToggleItemAsync(string id)
+        public async Task ToggleItemAsync(string id)
         {
-            throw new NotImplementedException();
+            var item = await _db.ToDoItems.FindAsync(id);
+            if (item == null)
+                throw new NotFoundException($"ToDo with the {id} couldn't be found");
+            
+            if (item.IsDone)
+            {
+                item.IsDone = false;
+                item.AchievedDate = null; 
+            }
+            else
+            {
+                item.IsDone = true;
+                item.AchievedDate = DateTime.UtcNow;
+            }
+            item.ModifiedDate = DateTime.UtcNow;
+
+            await _db.SaveChangesAsync();
         }
     }
 }
