@@ -127,4 +127,61 @@ namespace PlannerApp.Server.Services.V2
             return pagedList;
         }
     }
+
+    public class ToDosService : IToDosService
+    {
+
+        private readonly ApplicationDbContext _db;
+        private readonly IdentityOptions _identity;
+
+        public ToDosService(ApplicationDbContext db, IdentityOptions identity)
+        {
+            _db = db;
+            _identity = identity;
+        }
+
+        public async Task<ToDoItemDetail> CreatAsync(ToDoItemDetail item)
+        {
+            var plan = await _db.Plans.FindAsync(item.PlanId);
+            if (plan == null)
+                throw new NotFoundException($"Plan with the {item.PlanId} couldn't be found");
+
+            var todoItem = new ToDoItem
+            {
+                EstimatedDate = item.EstimationDate,
+                CreatedDate = DateTime.UtcNow,
+                Description = item.Description,
+                Id = Guid.NewGuid().ToString(),
+                IsDeleted = false,
+                IsDone = false,
+                Plan = plan,
+                UserId = _identity.UserId,
+                ModifiedDate = DateTime.UtcNow,
+            };
+            await _db.ToDoItems.AddAsync(todoItem);
+            await _db.SaveChangesAsync();
+
+            return todoItem; 
+        }
+
+        public Task DeleteAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ToDoItemDetail> EditAsync(ToDoItemDetail plan)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PagedList<ToDoItemDetail>> GetNotdoneAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ToggleItemAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
