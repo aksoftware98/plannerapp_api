@@ -24,7 +24,7 @@ namespace PlannerApp.Server.Services.V2
             _identity = identity;
         }
 
-        public async Task<ToDoItemDetail> CreatAsync(ToDoItemDetail item)
+        public async Task<ToDoItemDetail> CreateAsync(ToDoItemDetail item)
         {
             var plan = await _db.Plans.FindAsync(item.PlanId);
             if (plan == null)
