@@ -6,7 +6,15 @@ namespace PlannerApp.Models.V2.Responses
 {
     public class ApiResponse : ApiBaseResponse
     {
+        public ApiResponse(string message)
+        {
+            Message = message;
+        }
 
+        public ApiResponse()
+        {
+
+        }
     }
 
     public class ApiResponse<T> : ApiBaseResponse
