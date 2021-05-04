@@ -85,7 +85,7 @@ namespace PlannerApp.Server.Services
             var plans = allPlans.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToArray();
             foreach (var item in plans)
             {
-                item.ToDoItems = _db.ToDoItems.Where(i => !i.IsDeleted && i.PlanId == item.Id).ToArray();
+                item.ToDoItems = _db.ToDoItems.Where(i => !i.IsDeleted && i.PlanId == item.Id).ToList();
             }
 
             return plans; 
@@ -97,7 +97,7 @@ namespace PlannerApp.Server.Services
             if (plan.UserId != userId || plan.IsDeleted)
                 return null;
 
-            plan.ToDoItems = _db.ToDoItems.Where(i => !i.IsDeleted && i.UserId == userId && i.PlanId == id).ToArray();
+            plan.ToDoItems = _db.ToDoItems.Where(i => !i.IsDeleted && i.UserId == userId && i.PlanId == id).ToList();
 
             return plan;
         }
@@ -122,7 +122,7 @@ namespace PlannerApp.Server.Services
             var plans = allPlans.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToArray();
             foreach (var item in plans)
             {
-                item.ToDoItems = _db.ToDoItems.Where(i => !i.IsDeleted && i.PlanId == item.Id).ToArray();
+                item.ToDoItems = _db.ToDoItems.Where(i => !i.IsDeleted && i.PlanId == item.Id).ToList();
             }
 
             return plans;
