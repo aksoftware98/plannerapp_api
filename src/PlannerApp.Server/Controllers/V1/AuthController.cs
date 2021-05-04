@@ -10,6 +10,8 @@ using PlannerApp.Server.Services;
 
 namespace PlannerApp.Server.Controllers
 {
+    [ApiVersion("v1.0")]
+    [ApiExplorerSettings(GroupName = "v1.0")]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase

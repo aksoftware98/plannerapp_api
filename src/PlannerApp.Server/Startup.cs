@@ -81,6 +81,7 @@ namespace PlannerApp.Server
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "PlannerApp By AK Academy", Description = "PlannerApp is an for learners to learn how to build client applications using Xamarin.Forms, Blazor Webassembly and other .NET client side technologies", Version = "v1.0" });
+                options.SwaggerDoc("v2", new OpenApiInfo { Title = "PlannerApp v2.0 By AK Academy", Description = "PlannerApp is an for learners to learn how to build client applications using Xamarin.Forms, Blazor Webassembly and other .NET client side technologies", Version = "v2.0" });
             });
 
             services.AddControllersWithViews()
@@ -146,6 +147,7 @@ namespace PlannerApp.Server
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "PlannerApp v1");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "PlannerApp v2.0");
             });
 
             app.UseRouting();
