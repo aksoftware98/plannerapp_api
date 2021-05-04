@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace PlannerApp.Server.Controllers.V2
 {
-    [ApiExplorerSettings(GroupName = "v2.0")]
+    [ApiVersion("2.0")]
     [Route("api/v2/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase

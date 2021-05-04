@@ -13,8 +13,7 @@ using PlannerApp.Server.Services;
 
 namespace PlannerApp.Server.Controllers
 {
-    [ApiVersion("v2.0")]
-    [ApiExplorerSettings(GroupName = "v2.0")]
+    [ApiVersion("1.0")]
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]

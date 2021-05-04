@@ -80,8 +80,14 @@ namespace PlannerApp.Server
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "PlannerApp By AK Academy", Description = "PlannerApp is an for learners to learn how to build client applications using Xamarin.Forms, Blazor Webassembly and other .NET client side technologies", Version = "v1.0" });
-                options.SwaggerDoc("v2", new OpenApiInfo { Title = "PlannerApp v2.0 By AK Academy", Description = "PlannerApp is an for learners to learn how to build client applications using Xamarin.Forms, Blazor Webassembly and other .NET client side technologies", Version = "v2.0" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "PlannerApp By AK Academy", Description = "PlannerApp is an for learners to learn how to build client applications using Xamarin.Forms, Blazor Webassembly and other .NET client side technologies", Version = "1.0" });
+                options.SwaggerDoc("v2", new OpenApiInfo { Title = "PlannerApp v2.0 By AK Academy", Description = "PlannerApp is an for learners to learn how to build client applications using Xamarin.Forms, Blazor Webassembly and other .NET client side technologies", Version = "2.0" });
+            });
+
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = false;
             });
 
             services.AddControllersWithViews()
@@ -157,10 +163,10 @@ namespace PlannerApp.Server
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
+                //endpoints.MapControllerRoute(
+                //    name: "default",
+                //    pattern: "{controller=Home}/{action=Index}/{id?}");
+                //endpoints.MapRazorPages();
             });
         }
     }
