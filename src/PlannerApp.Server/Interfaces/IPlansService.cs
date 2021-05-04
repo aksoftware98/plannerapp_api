@@ -13,7 +13,7 @@ namespace PlannerApp.Server.Interfaces
         Task<PlanDetail> EditAsync(PlanDetail plan);
         Task DeleteAsync(string id);
         Task<PlanDetail> GetByIdAsync(string id);
-        Task<PagedList<PlanDetail>> GetPlans(string query, int page = 1, int pageSize = 12);
+        Task<PagedList<PlanDetail>> GetPlansAsync(string query, int page = 1, int pageSize = 12);
 
     }
 
