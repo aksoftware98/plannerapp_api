@@ -23,6 +23,9 @@ using Microsoft.AspNetCore.Mvc;
 using PlannerApp.Server.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.Extensions.Options;
 
 namespace PlannerApp.Server
 {
@@ -45,7 +48,7 @@ namespace PlannerApp.Server
                 options.UseLazyLoadingProxies();
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
-            
+
             services.AddDefaultIdentity<ApplicationUser>(options =>
             {
                 options.Password.RequireDigit = true;
@@ -78,17 +81,19 @@ namespace PlannerApp.Server
 
             services.AddScoped<PlannerApp.Server.Interfaces.IPlansService, PlannerApp.Server.Services.V2.PlansService>();
 
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "PlannerApp By AK Academy", Description = "PlannerApp is an for learners to learn how to build client applications using Xamarin.Forms, Blazor Webassembly and other .NET client side technologies", Version = "1.0" });
-                options.SwaggerDoc("v2", new OpenApiInfo { Title = "PlannerApp v2.0 By AK Academy", Description = "PlannerApp is an for learners to learn how to build client applications using Xamarin.Forms, Blazor Webassembly and other .NET client side technologies", Version = "2.0" });
-            });
-
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+            services.AddSwaggerGen();
             services.AddApiVersioning(options =>
             {
                 options.DefaultApiVersion = new ApiVersion(1, 0);
                 options.AssumeDefaultVersionWhenUnspecified = true;
-                options.ReportApiVersions = true; 
+                options.ReportApiVersions = true;
+            });
+
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
             });
 
             services.AddControllersWithViews()
@@ -98,7 +103,7 @@ namespace PlannerApp.Server
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
 
-            services.AddScoped<IStorageService, AzureBlobStorageService>(); 
+            services.AddScoped<IStorageService, AzureBlobStorageService>();
 
             services.AddRazorPages();
 
@@ -131,7 +136,7 @@ namespace PlannerApp.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -153,8 +158,10 @@ namespace PlannerApp.Server
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PlannerApp v1");
-                c.SwaggerEndpoint("/swagger/v2/swagger.json", "PlannerApp v2.0");
+                foreach (var item in provider.ApiVersionDescriptions)
+                {
+                    c.SwaggerEndpoint($"/swagger/{item.GroupName}/swagger.json", item.GroupName.ToUpper());
+                }
             });
 
             app.UseRouting();
@@ -171,4 +178,38 @@ namespace PlannerApp.Server
             });
         }
     }
+
+    public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
+    {
+        private readonly IApiVersionDescriptionProvider _provider;
+
+        public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) => _provider = provider;
+
+        public void Configure(SwaggerGenOptions options)
+        {
+            // add a swagger document for each discovered API version
+            // note: you might choose to skip or document deprecated API versions differently
+            foreach (var description in _provider.ApiVersionDescriptions)
+            {
+                options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
+            }
+        }
+
+        private static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
+        {
+            var info = new OpenApiInfo()
+            {
+                Title = "Weather Web API",
+                Version = description.ApiVersion.ToString(),
+            };
+
+            if (description.IsDeprecated)
+            {
+                info.Description += " This API version has been deprecated.";
+            }
+
+            return info;
+        }
+    }
+
 }

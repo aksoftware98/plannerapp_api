@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PlannerApp.Models.V2.DTO;
 using PlannerApp.Models.V2.Responses;
 using PlannerApp.Server.Interfaces;
@@ -9,6 +10,7 @@ namespace PlannerApp.Server.Controllers.V2
     [ApiVersion("2.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
+    [Authorize]
     public class ToDosController : ControllerBase
     {
 
@@ -58,7 +60,7 @@ namespace PlannerApp.Server.Controllers.V2
         #region Delete
         [ProducesResponseType(200, Type = typeof(ApiResponse))]
         [ProducesResponseType(400)]
-        [HttpPut()]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             await _todos.DeleteAsync(id);
