@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PlannerApp.Server.Models;
 
-namespace PlannerApp.Server.Controllers
+namespace PlannerApp.Server.V1.Controllers
 {
     public class HomeController : Controller
     {

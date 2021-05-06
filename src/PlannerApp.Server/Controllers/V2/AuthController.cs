@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace PlannerApp.Server.Controllers.V2
 {
     [ApiVersion("2.0")]
-    [Route("api/v2/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {

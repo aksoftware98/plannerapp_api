@@ -8,11 +8,11 @@ using Microsoft.Extensions.Configuration;
 using PlannerApp.Models;
 using PlannerApp.Server.Services;
 
-namespace PlannerApp.Server.Controllers
+namespace PlannerApp.Server.V1.Controllers
 {
-    [ApiVersion("v1.0")]
-    [ApiExplorerSettings(GroupName = "v1.0")]
+    [ApiVersion("1.0")]
     [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {

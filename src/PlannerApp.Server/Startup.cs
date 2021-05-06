@@ -87,7 +87,8 @@ namespace PlannerApp.Server
             services.AddApiVersioning(options =>
             {
                 options.DefaultApiVersion = new ApiVersion(1, 0);
-                options.AssumeDefaultVersionWhenUnspecified = false;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true; 
             });
 
             services.AddControllersWithViews()
@@ -163,10 +164,10 @@ namespace PlannerApp.Server
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapControllerRoute(
-                //    name: "default",
-                //    pattern: "{controller=Home}/{action=Index}/{id?}");
-                //endpoints.MapRazorPages();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

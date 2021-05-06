@@ -11,10 +11,11 @@ using Microsoft.Extensions.Configuration;
 using PlannerApp.Models;
 using PlannerApp.Server.Services;
 
-namespace PlannerApp.Server.Controllers
+namespace PlannerApp.Server.V1.Controllers
 {
     [ApiVersion("1.0")]
     [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [Authorize]
     public class PlansController : ControllerBase
