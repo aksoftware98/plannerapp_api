@@ -36,7 +36,7 @@ namespace PlannerApp.Server.Controllers.V2
 
         #region Create
         [ProducesResponseType(200, Type = typeof(ApiResponse<ToDoItemDetail>))]
-        [ProducesResponseType(400, type = typeof(ApiErrorResponse))]
+        [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
         [HttpPost()]
         public async Task<IActionResult> Post([FromBody] ToDoItemDetail model)
         {
@@ -48,7 +48,7 @@ namespace PlannerApp.Server.Controllers.V2
 
         #region Update
         [ProducesResponseType(200, Type = typeof(ApiResponse<ToDoItemDetail>))]
-        [ProducesResponseType(400, type = typeof(ApiErrorResponse))]
+        [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
         [HttpPut()]
         public async Task<IActionResult> Put([FromBody] ToDoItemDetail model)
         {
@@ -57,20 +57,20 @@ namespace PlannerApp.Server.Controllers.V2
             return Ok(new ApiResponse<ToDoItemDetail>(result, "ToDo edited successfully"));
         }
 
-        [ProducesResponseType(200, Type = typeof(ApiResponse<ToDoItemDetail>))]
-        [ProducesResponseType(400, type = typeof(ApiErrorResponse))]
+        [ProducesResponseType(200, Type = typeof(ApiResponse))]
+        [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
         [HttpPut("Toggle/{id}")]
         public async Task<IActionResult> Toggle(string id)
         {
-            var result = await _todos.EditAsync(model);
+            await _todos.ToggleItemAsync(id);
 
-            return Ok(new ApiResponse<ToDoItemDetail>(result, "ToDo toggled successfully"));
+            return Ok(new ApiResponse("ToDo toggled successfully"));
         }
         #endregion
 
         #region Delete
         [ProducesResponseType(200, Type = typeof(ApiResponse))]
-        [ProducesResponseType(400, type = typeof(ApiErrorResponse))]
+        [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
