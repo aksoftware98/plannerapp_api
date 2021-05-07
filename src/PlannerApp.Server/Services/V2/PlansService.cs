@@ -107,8 +107,10 @@ namespace PlannerApp.Server.Services.V2
             return plan.ToPlanDetail(true);
         }
 
-        public async Task<PagedList<PlanDetail>> GetPlansAsync(string query, int page = 1, int pageSize = 12)
+        public async Task<PagedList<PlanDetail>> GetPlansAsync(string query = "", int page = 1, int pageSize = 12)
         {
+            if (string.IsNullOrWhiteSpace(query))
+                query = "";
             if (page < 1)
                 page = 1;
             if (pageSize < 5)
@@ -118,8 +120,8 @@ namespace PlannerApp.Server.Services.V2
 
             var plans = await (from p in _db.Plans
                                  where p.UserId == _identity.UserId
-                                 && (p.Title.Contains(query, StringComparison.InvariantCultureIgnoreCase)
-                                    || p.Description.Contains(query, StringComparison.InvariantCultureIgnoreCase))
+                                 && (p.Title.Contains(query)
+                                    || p.Description.Contains(query))
                                  orderby p.CreatedDate descending
                                  select p).ToArrayAsync();
 

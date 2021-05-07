@@ -26,6 +26,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.Extensions.Options;
+using PlannerApp.Server.Middlewares;
 
 namespace PlannerApp.Server
 {
@@ -75,11 +76,13 @@ namespace PlannerApp.Server
                 };
             });
 
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserService, Services.V2.UserService>();
+            services.AddScoped<IUserServiceV1, Services.UserService>();
             services.AddTransient<PlannerApp.Server.Services.IPlansService, PlansService>();
             services.AddTransient<PlannerApp.Server.Services.IItemsService, ToDoItemsService>();
 
             services.AddScoped<PlannerApp.Server.Interfaces.IPlansService, PlannerApp.Server.Services.V2.PlansService>();
+            services.AddScoped<PlannerApp.Server.Interfaces.IToDosService, PlannerApp.Server.Services.V2.ToDosService>();
 
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
             services.AddSwaggerGen();
@@ -140,15 +143,17 @@ namespace PlannerApp.Server
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                //app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();

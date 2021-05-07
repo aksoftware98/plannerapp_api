@@ -8,12 +8,13 @@ namespace PlannerApp.Models.V2.Responses
     {
         public ApiResponse(string message)
         {
+            IsSuccess = true;
             Message = message;
         }
 
         public ApiResponse()
         {
-
+            IsSuccess = true;
         }
     }
 

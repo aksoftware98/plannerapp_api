@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace PlannerApp.Server.Services
 {
-    public interface IUserService
+    public interface IUserServiceV1
     {
 
         Task<UserManagerResponse> RegisterUserAsync(RegisterRequest model);
@@ -21,7 +21,7 @@ namespace PlannerApp.Server.Services
         Task<UserManagerResponse> LoginUserAsync(LoginRequest model);
     }
 
-    public class UserService : IUserService
+    public class UserService : IUserServiceV1
     {
 
         private UserManager<ApplicationUser> _userManger;

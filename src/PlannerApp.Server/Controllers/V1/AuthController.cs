@@ -17,9 +17,9 @@ namespace PlannerApp.Server.V1.Controllers
     public class AuthController : ControllerBase
     {
 
-        private IUserService _userService;
+        private IUserServiceV1 _userService;
         private IConfiguration _configuration;
-        public AuthController(IUserService userService,  IConfiguration configuration)
+        public AuthController(IUserServiceV1 userService,  IConfiguration configuration)
         {
             _userService = userService;
             _configuration = configuration;

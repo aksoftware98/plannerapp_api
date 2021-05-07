@@ -5,6 +5,7 @@ using PlannerApp.Models;
 using PlannerApp.Models.V2.DTO;
 using PlannerApp.Models.V2.Responses;
 using PlannerApp.Server.Exceptions;
+using PlannerApp.Server.Interfaces;
 using PlannerApp.Server.Services;
 using System;
 using System.Collections.Generic;
