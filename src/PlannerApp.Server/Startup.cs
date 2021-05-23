@@ -99,13 +99,7 @@ namespace PlannerApp.Server
                 options.SubstituteApiVersionInUrl = true;
             });
 
-            services.AddControllersWithViews()
-                .AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-            });
-
+            services.AddControllersWithViews();
             services.AddScoped<IStorageService, AzureBlobStorageService>();
 
             services.AddRazorPages();

@@ -43,10 +43,8 @@ namespace PlannerApp.Server.Middlewares
             switch (exception)
             {
                 //TODO: all exceptions caused by the user
-                case NotSupportedException ex:
-                    code = HttpStatusCode.BadRequest;
-                    result = new ApiErrorResponse(ex.Message);
-                    break;
+                case NotSupportedException _:
+                case AlreadyExistsException _:
                 case ValidationException _:
                 case NotFoundException _:
                     code = HttpStatusCode.BadRequest;

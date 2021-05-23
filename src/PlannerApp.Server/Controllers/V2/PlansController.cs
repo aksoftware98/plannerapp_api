@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PlannerApp.Models;
 using PlannerApp.Models.V2.DTO;
 using PlannerApp.Models.V2.Responses;
 using PlannerApp.Server.Interfaces;
@@ -27,7 +28,7 @@ namespace PlannerApp.Server.Controllers.V2
 
         #region Get
         [ProducesResponseType(200, Type = typeof(ApiResponse<PagedList<PlanDetail>>))]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
         [HttpGet]
         public async Task<IActionResult> Get(string query, int page, int pageNumber)
         {
@@ -37,7 +38,7 @@ namespace PlannerApp.Server.Controllers.V2
         }
 
         [ProducesResponseType(200, Type = typeof(ApiResponse<PlanDetail>))]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
@@ -49,7 +50,7 @@ namespace PlannerApp.Server.Controllers.V2
 
         #region Create
         [ProducesResponseType(200, Type = typeof(ApiResponse<PlanDetail>))]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
         [HttpPost()]
         public async Task<IActionResult> Post([FromForm]PlanDetail model)
         {
@@ -61,7 +62,7 @@ namespace PlannerApp.Server.Controllers.V2
 
         #region Update
         [ProducesResponseType(200, Type = typeof(ApiResponse<PlanDetail>))]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
         [HttpPut()]
         public async Task<IActionResult> Put([FromForm] PlanDetail model)
         {
@@ -73,7 +74,7 @@ namespace PlannerApp.Server.Controllers.V2
 
         #region Delete
         [ProducesResponseType(200, Type = typeof(ApiResponse))]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {

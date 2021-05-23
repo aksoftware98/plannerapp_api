@@ -24,7 +24,7 @@ namespace PlannerApp.Server.Controllers.V2
 
         #region Get
         [ProducesResponseType(200, Type = typeof(ApiResponse<PagedList<ToDoItemDetail>>))]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
         [HttpGet("pendings")]
         public async Task<IActionResult> GetPendings(int page, int pageNumber)
         {

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using PlannerApp.Models;
+using PlannerApp.Server.Exceptions;
 using PlannerApp.Server.Interfaces;
 using PlannerApp.Server.Models;
 using System;
@@ -32,11 +33,11 @@ namespace PlannerApp.Server.Services.V2
                 throw new NullReferenceException("Reigster Model is null");
 
             if (model.Password != model.ConfirmPassword)
-                return new UserManagerResponse
-                {
-                    Message = "Confirm password doesn't match the password",
-                    IsSuccess = false,
-                };
+                throw new ValidationException("Confirm Password doesn't match the password", null);
+
+            var userByEmail = await _userManger.FindByEmailAsync(model.Email);
+            if (userByEmail != null)
+                throw new AlreadyExistsException($"User with the email {model.Email} already exists");
 
             var identityUser = new ApplicationUser
             {
@@ -57,14 +58,7 @@ namespace PlannerApp.Server.Services.V2
                     IsSuccess = true,
                 };
             }
-
-            return new UserManagerResponse
-            {
-                Message = "User did not create",
-                IsSuccess = false,
-                Errors = result.Errors.Select(e => e.Description)
-            };
-
+            throw new ValidationException("Failed to create the user", null); 
         }
 
         public async Task<UserManagerResponse> LoginUserAsync(LoginRequest model)
@@ -73,21 +67,13 @@ namespace PlannerApp.Server.Services.V2
 
             if (user == null)
             {
-                return new UserManagerResponse
-                {
-                    Message = "There is no user with that Email address",
-                    IsSuccess = false,
-                };
+                throw new NotFoundException($"Username or password is invalid");
             }
 
             var result = await _userManger.CheckPasswordAsync(user, model.Password);
 
             if (!result)
-                return new UserManagerResponse
-                {
-                    Message = "Invalid password",
-                    IsSuccess = false,
-                };
+                throw new NotFoundException($"Username or password is invalid");
 
             var claims = new[]
             {
