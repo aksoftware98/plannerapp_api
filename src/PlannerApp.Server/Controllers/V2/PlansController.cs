@@ -30,9 +30,9 @@ namespace PlannerApp.Server.Controllers.V2
         [ProducesResponseType(200, Type = typeof(ApiResponse<PagedList<PlanDetail>>))]
         [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
         [HttpGet]
-        public async Task<IActionResult> Get(string query, int page, int pageNumber)
+        public async Task<IActionResult> Get(string query, int pageNumber, int pageSize)
         {
-            var result = await _plans.GetPlansAsync(query, page, pageNumber);
+            var result = await _plans.GetPlansAsync(query, pageNumber, pageSize);
 
             return Ok(new ApiResponse<PagedList<PlanDetail>>(result, "Plans retrieved successfully"));
         }
