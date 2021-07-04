@@ -40,7 +40,7 @@ namespace PlannerApp.Server.Services
             string newFileName = $"{Path.GetFileNameWithoutExtension(fileName)}-{Guid.NewGuid()}{extension}";
             ValidateExtension(extension, blobType);
 
-            string url = _config["AzureBlobSettings:Url"];
+            string url = _config["AzureBlobSettings:BlobEndpoint"];
 
             await _container.CreateIfNotExistsAsync();
             var blob = _container.GetBlobClient(newFileName);
