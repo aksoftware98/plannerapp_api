@@ -119,7 +119,7 @@ namespace PlannerApp.Server.Services.V2
                 pageSize = 50;
 
             var plans = await (from p in _db.Plans
-                                 where p.UserId == _identity.UserId
+                                 where p.UserId == _identity.UserId && !p.IsDeleted
                                  && (p.Title.Contains(query)
                                     || p.Description.Contains(query))
                                  orderby p.CreatedDate descending
